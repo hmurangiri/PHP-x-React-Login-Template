@@ -44,12 +44,20 @@ final class Csrf
 
         // Basic checks
         if (!is_string($token)) {
+            if (defined('AUTH_API') && function_exists('json_error')) {
+                json_error('Invalid CSRF token', 'INVALID_CSRF', 403);
+            }
+
             http_response_code(403);
             exit('Invalid CSRF token');
         }
 
         // Must exist and must match
         if (empty($_SESSION['csrf_token']) || !hash_equals((string) $_SESSION['csrf_token'], $token)) {
+            if (defined('AUTH_API') && function_exists('json_error')) {
+                json_error('Invalid CSRF token', 'INVALID_CSRF', 403);
+            }
+
             http_response_code(403);
             exit('Invalid CSRF token');
         }
