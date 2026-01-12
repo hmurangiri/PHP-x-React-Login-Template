@@ -3,7 +3,7 @@
  *
  * PURPOSE:
  * - Fetch list of users from backend (admin endpoint).
- * - Allow editing a user's roles and permissions.
+ * - Allow editing a user's roles.
  *
  * REQUIREMENTS:
  * - PHP endpoint: GET /auth/api/admin/users.php
@@ -41,15 +41,14 @@ export function UsersPage() {
     }, []);
 
     /**
-     * Save roles and permissions for a given user.
+     * Save roles for a given user.
      */
-    async function updateAccess(userId, roles, permissions) {
+    async function updateAccess(userId, roles) {
         setError("");
         try {
             await api.adminUpdateUserAccess({
                 userId,
                 roles,
-                permissions,
                 csrfToken,
             });
 
@@ -73,7 +72,6 @@ export function UsersPage() {
                         <th>Email</th>
                         <th>Name</th>
                         <th>Roles (comma)</th>
-                        <th>Permissions (comma)</th>
                         <th>Action</th>
                     </tr>
                 </thead>
