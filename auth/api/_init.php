@@ -28,6 +28,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 declare(strict_types=1);
 
+define('AUTH_API', true);
+
 require_once __DIR__ . '/../bootstrap.php';
 
 use AuthModule\Database;
@@ -58,4 +60,16 @@ function json_out(array $payload, int $status = 200): void
     http_response_code($status);
     echo json_encode($payload);
     exit;
+}
+
+/**
+ * Helper: output JSON error and stop
+ */
+function json_error(string $message, string $code, int $status = 400): void
+{
+    json_out([
+        'ok' => false,
+        'error' => $message,
+        'code' => $code,
+    ], $status);
 }

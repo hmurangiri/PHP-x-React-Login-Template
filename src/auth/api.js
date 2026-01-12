@@ -53,7 +53,11 @@ export function createAuthApi({ baseUrl = DEFAULT_BASE } = {}) {
         // If backend returned error status, throw JS error
         if (!res.ok) {
             const message = data?.error || `Request failed (${res.status})`;
-            throw new Error(message);
+            const error = new Error(message);
+            if (data?.code) {
+                error.code = data.code;
+            }
+            throw error;
         }
 
         return data;

@@ -10,8 +10,9 @@ require_once __DIR__ . '/_init.php';
 
 use AuthModule\Csrf;
 
-if ($_SERVER['REQUEST_METHOD'] !== 'POST')
-    json_out(['error' => 'Method not allowed'], 405);
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    json_error('Method not allowed', 'METHOD_NOT_ALLOWED', 405);
+}
 
 $body = read_json();
 $_POST['csrf_token'] = (string) ($body['csrfToken'] ?? '');
@@ -26,5 +27,5 @@ try {
     $user = $auth->user();
     json_out(['ok' => true, 'user' => $user], 201);
 } catch (Throwable $e) {
-    json_out(['ok' => false, 'error' => $e->getMessage()], 400);
+    json_error($e->getMessage(), 'REGISTER_FAILED', 400);
 }
