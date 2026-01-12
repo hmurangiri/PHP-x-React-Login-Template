@@ -2,6 +2,18 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Configuration
+
+### Auth API base URL
+
+Set `REACT_APP_AUTH_BASE_URL` to point the frontend at your auth API. If omitted, the app defaults to `http://localhost/LoginTemplate/auth/api/`.
+
+Example (macOS/Linux):
+
+```bash
+REACT_APP_AUTH_BASE_URL="http://localhost/LoginTemplate/auth/api/" npm start
+```
+
 ## Available Scripts
 
 In the project directory, you can run:
