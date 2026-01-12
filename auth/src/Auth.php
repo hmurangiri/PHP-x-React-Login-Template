@@ -39,6 +39,7 @@ declare(strict_types=1);
 namespace AuthModule;
 
 use DateTimeImmutable;
+use mysqli_sql_exception;
 
 final class Auth
 {
@@ -102,13 +103,30 @@ final class Auth
             throw new \InvalidArgumentException('Password must be at least 8 characters');
         }
 
+        $stmt = $this->db->conn()->prepare(
+            "SELECT id FROM users WHERE email = ? LIMIT 1"
+        );
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        $existingUser = $stmt->get_result()->fetch_assoc();
+        if ($existingUser) {
+            throw new \InvalidArgumentException('Email already registered');
+        }
+
         $hash = password_hash($password, PASSWORD_DEFAULT);
 
         $stmt = $this->db->conn()->prepare(
             "INSERT INTO users (email, password_hash, name) VALUES (?, ?, ?)"
         );
         $stmt->bind_param("sss", $email, $hash, $name);
-        $stmt->execute();
+        try {
+            $stmt->execute();
+        } catch (mysqli_sql_exception $e) {
+            if ((int) $e->getCode() === 1062) {
+                throw new \InvalidArgumentException('Email already registered');
+            }
+            throw $e;
+        }
 
         $userId = (int) $this->db->conn()->insert_id;
 
