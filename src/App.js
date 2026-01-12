@@ -82,7 +82,7 @@ function Forbidden() {
 export default function App() {
   const baseUrl =
     process.env.REACT_APP_AUTH_BASE_URL ??
-    "/auth/api";
+    "http://localhost/LoginTemplate/auth/api/";
 
   return (
     // <AuthProvider baseUrl="http://localhost:8000/auth/api">

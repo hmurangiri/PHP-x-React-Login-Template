@@ -95,7 +95,6 @@ export function AuthProvider({ baseUrl, children }) {
      * Everything the app can access.
      */
     const value = {
-        api,
         user,
         csrfToken,
         loading,
