@@ -26,6 +26,22 @@ try {
     $auth->register($email, $password, $name);
     $user = $auth->user();
     json_out(['ok' => true, 'user' => $user], 201);
+} catch (InvalidArgumentException $e) {
+    $message = $e->getMessage();
+    $lowerMessage = strtolower($message);
+    $field = null;
+
+    if (str_contains($lowerMessage, 'email')) {
+        $field = 'email';
+    } elseif (str_contains($lowerMessage, 'password')) {
+        $field = 'password';
+    }
+
+    json_out([
+        'ok' => false,
+        'error' => $message,
+        'field' => $field,
+    ], 400);
 } catch (Throwable $e) {
     json_error($e->getMessage(), 'REGISTER_FAILED', 400);
 }
