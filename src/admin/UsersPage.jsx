@@ -11,15 +11,12 @@
  * - AuthProvider must exist to supply csrfToken and refresh()
  */
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAuth } from "../auth/AuthProvider";
-import { createAuthApi } from "../auth/api";
 import { UserRow } from "./UserRow";
 
 export function UsersPage() {
-    const { csrfToken, refresh } = useAuth();
-    const { loading } = useAuth();
-    const api = useMemo(() => createAuthApi(), []);
+    const { api, csrfToken, refresh } = useAuth();
     const [users, setUsers] = useState([]);
     const [error, setError] = useState("");
 
@@ -82,7 +79,6 @@ export function UsersPage() {
                             key={u.id}
                             user={u}
                             onSave={updateAccess}
-                            saveDisabled={loading}
                         />
                     ))}
                 </tbody>
