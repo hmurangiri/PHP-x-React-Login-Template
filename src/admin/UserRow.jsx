@@ -24,7 +24,7 @@ function csvToList(csv) {
         .filter(Boolean);
 }
 
-export function UserRow({ user, onSave }) {
+export function UserRow({ user, onSave, saveDisabled = false }) {
     const [rolesCsv, setRolesCsv] = useState(listToCsv(user.roles));
     const [permsCsv, setPermsCsv] = useState(listToCsv(user.permissions));
 
@@ -51,6 +51,7 @@ export function UserRow({ user, onSave }) {
             <td>
                 <button
                     onClick={() => onSave(user.id, csvToList(rolesCsv), csvToList(permsCsv))}
+                    disabled={saveDisabled}
                 >
                     Save
                 </button>
