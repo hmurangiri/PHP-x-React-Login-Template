@@ -11,12 +11,14 @@
  * - AuthProvider must exist to supply csrfToken and refresh()
  */
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useAuth } from "../auth/AuthProvider";
+import { createAuthApi } from "../auth/api";
 import { UserRow } from "./UserRow";
 
 export function UsersPage() {
     const { csrfToken, refresh } = useAuth();
+    const api = useMemo(() => createAuthApi(), []);
     const [users, setUsers] = useState([]);
     const [error, setError] = useState("");
 
@@ -27,14 +29,7 @@ export function UsersPage() {
     async function loadUsers() {
         setError("");
         try {
-            const res = await fetch("/auth/api/admin/users.php", {
-                method: "GET",
-                credentials: "include",
-            });
-
-            const data = await res.json().catch(() => ({}));
-            if (!res.ok) throw new Error(data?.error || "Failed to load users");
-
+            const data = await api.adminListUsers();
             setUsers(data.users || []);
         } catch (e) {
             setError(e.message);
@@ -51,20 +46,12 @@ export function UsersPage() {
     async function updateAccess(userId, roles, permissions) {
         setError("");
         try {
-            const res = await fetch("/auth/api/admin/update-user-access.php", {
-                method: "POST",
-                credentials: "include",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    userId,
-                    roles,
-                    permissions,
-                    csrfToken,
-                }),
+            await api.adminUpdateUserAccess({
+                userId,
+                roles,
+                permissions,
+                csrfToken,
             });
-
-            const data = await res.json().catch(() => ({}));
-            if (!res.ok) throw new Error(data?.error || "Update failed");
 
             // Reload list, and also refresh current user (in case you edited yourself)
             await loadUsers();

@@ -96,6 +96,7 @@ export function AuthProvider({ baseUrl, children }) {
      */
     const value = {
         user,
+        csrfToken,
         loading,
         login,
         register,

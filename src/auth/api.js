@@ -81,5 +81,11 @@ export function createAuthApi({ baseUrl = DEFAULT_BASE } = {}) {
                 method: "POST",
                 body: JSON.stringify(payload),
             }),
+        adminListUsers: () => jsonFetch("/admin/users.php"),
+        adminUpdateUserAccess: (payload) =>
+            jsonFetch("/admin/update-user-access.php", {
+                method: "POST",
+                body: JSON.stringify(payload),
+            }),
     };
 }
