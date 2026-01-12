@@ -29,4 +29,10 @@ return [
         'session_days' => 1,
         'default_role_key' => 'user',
     ],
+    'cors' => [
+        'allowed_origins' => [
+            'http://localhost:5173',
+            'http://localhost:3000',
+        ],
+    ],
 ];

@@ -24,7 +24,7 @@ function csvToList(csv) {
         .filter(Boolean);
 }
 
-export function UserRow({ user, onSave }) {
+export function UserRow({ user, onSave, saveDisabled = false }) {
     const [rolesCsv, setRolesCsv] = useState(listToCsv(user.roles));
 
     return (

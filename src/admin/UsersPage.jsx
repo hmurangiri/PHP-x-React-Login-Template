@@ -18,6 +18,7 @@ import { UserRow } from "./UserRow";
 
 export function UsersPage() {
     const { csrfToken, refresh } = useAuth();
+    const { loading } = useAuth();
     const api = useMemo(() => createAuthApi(), []);
     const [users, setUsers] = useState([]);
     const [error, setError] = useState("");
@@ -77,7 +78,12 @@ export function UsersPage() {
                 </thead>
                 <tbody>
                     {users.map((u) => (
-                        <UserRow key={u.id} user={u} onSave={updateAccess} />
+                        <UserRow
+                            key={u.id}
+                            user={u}
+                            onSave={updateAccess}
+                            saveDisabled={loading}
+                        />
                     ))}
                 </tbody>
             </table>

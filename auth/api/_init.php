@@ -8,12 +8,40 @@
  */
 
 $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
-$allowed = [
-    'http://localhost:5173',
-    'http://localhost:3000',
-];
+$config = require __DIR__ . '/../config.php';
+$allowed = $config['cors']['allowed_origins'] ?? [];
 
-if (in_array($origin, $allowed, true)) {
+function origin_is_allowed(string $origin, array $allowed): bool
+{
+    if ($origin === '') {
+        return false;
+    }
+
+    foreach ($allowed as $pattern) {
+        if (!is_string($pattern) || $pattern === '') {
+            continue;
+        }
+
+        if ($pattern === $origin) {
+            return true;
+        }
+
+        if (str_starts_with($pattern, '/') && str_ends_with($pattern, '/')) {
+            if (@preg_match($pattern, $origin) === 1) {
+                return true;
+            }
+            continue;
+        }
+
+        if (str_contains($pattern, '*') && fnmatch($pattern, $origin)) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+if (origin_is_allowed($origin, $allowed)) {
     header("Access-Control-Allow-Origin: $origin");
     header("Access-Control-Allow-Credentials: true");
     header("Access-Control-Allow-Headers: Content-Type");
