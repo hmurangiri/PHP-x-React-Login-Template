@@ -13,13 +13,14 @@
 import React from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "./AuthProvider";
+import { Loading } from "../components/Loading";
 
 export function RequireAuth({ children }) {
     const { user, loading } = useAuth();
     const location = useLocation();
 
     // Still checking session
-    if (loading) return null;
+    if (loading) return <Loading message="Checking your session..." />;
 
     // Not logged in → redirect to login
     if (!user) {
