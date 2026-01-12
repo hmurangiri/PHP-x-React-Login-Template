@@ -37,20 +37,12 @@ final class Database
         mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
         // Connect: host, user, pass, database name, port
-        // $this->db = new mysqli(
-        //     (string) $c['host'],
-        //     (string) $c['user'],
-        //     (string) $c['pass'],
-        //     (string) $c['name'],
-        //     (int) $c['port']
-        // );
-
         $this->db = new mysqli(
-            '127.0.0.1',
-            'root',
-            '',
-            'test1',
-            8111
+            (string) $c['host'],
+            (string) $c['user'],
+            (string) $c['pass'],
+            (string) $c['name'],
+            (int) $c['port']
         );
 
         // Step 2: Set DB charset so text is stored correctly.
