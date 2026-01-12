@@ -30,9 +30,13 @@ try {
     $message = $e->getMessage();
     $lowerMessage = strtolower($message);
     $field = null;
+    $code = null;
 
     if (str_contains($lowerMessage, 'email')) {
         $field = 'email';
+        if (str_contains($lowerMessage, 'already registered')) {
+            $code = 'EMAIL_ALREADY_REGISTERED';
+        }
     } elseif (str_contains($lowerMessage, 'password')) {
         $field = 'password';
     }
@@ -41,6 +45,7 @@ try {
         'ok' => false,
         'error' => $message,
         'field' => $field,
+        'code' => $code,
     ], 400);
 } catch (Throwable $e) {
     json_error($e->getMessage(), 'REGISTER_FAILED', 400);
