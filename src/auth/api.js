@@ -57,6 +57,9 @@ export function createAuthApi({ baseUrl = DEFAULT_BASE } = {}) {
             if (data?.code) {
                 error.code = data.code;
             }
+            if (data?.field) {
+                error.field = data.field;
+            }
             throw error;
         }
 

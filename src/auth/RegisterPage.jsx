@@ -35,6 +35,7 @@ export function RegisterPage() {
      * Local state for errors
      */
     const [error, setError] = useState("");
+    const [fieldErrors, setFieldErrors] = useState({});
 
     /**
      * Router helpers for redirect after signup
@@ -55,6 +56,7 @@ export function RegisterPage() {
     async function onSubmit(e) {
         e.preventDefault();
         setError("");
+        setFieldErrors({});
 
         try {
             await register(name, email, password);
@@ -62,6 +64,11 @@ export function RegisterPage() {
             const redirectTo = location.state?.from || "/";
             navigate(redirectTo, { replace: true });
         } catch (err) {
+            if (err.field) {
+                setFieldErrors({ [err.field]: err.message });
+                return;
+            }
+
             setError(err.message);
         }
     }
@@ -80,6 +87,9 @@ export function RegisterPage() {
                     onChange={(e) => setName(e.target.value)}
                     placeholder="John"
                 />
+                {fieldErrors.name ? (
+                    <p style={{ color: "red", margin: "4px 0 0" }}>{fieldErrors.name}</p>
+                ) : null}
                 <br /><br />
 
                 <label>Email</label><br />
@@ -90,6 +100,9 @@ export function RegisterPage() {
                     required
                     placeholder="john@example.com"
                 />
+                {fieldErrors.email ? (
+                    <p style={{ color: "red", margin: "4px 0 0" }}>{fieldErrors.email}</p>
+                ) : null}
                 <br /><br />
 
                 <label>Password</label><br />
@@ -100,6 +113,9 @@ export function RegisterPage() {
                     required
                     placeholder="At least 8 characters"
                 />
+                {fieldErrors.password ? (
+                    <p style={{ color: "red", margin: "4px 0 0" }}>{fieldErrors.password}</p>
+                ) : null}
                 <br /><br />
 
                 <button type="submit">Create account</button>
