@@ -10,10 +10,11 @@
 
 import React from "react";
 import { useAuth } from "./AuthProvider";
+import { Loading } from "../components/Loading";
 
 export function RequirePermission({ perm, children, fallback = null }) {
     const { user, loading } = useAuth();
-    if (loading) return null;
+    if (loading) return <Loading message="Checking permissions..." />;
 
     const perms = user?.permissions || [];
     if (!perms.includes(perm)) return fallback;
